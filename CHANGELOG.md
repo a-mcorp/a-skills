@@ -28,10 +28,13 @@ Template
 - Fedora-based `askillsAgent.dockerfile` image under `Dockerfiles/Claude`, with Visual Studio Code, the Claude Code extension, Claude Desktop App and Claude Code CLI.
 - Downloaded installers and cached `.vsix` packages are removed in the same image layer, to keep both images small.
 - Firefox as the default browser, with a `vscode://` URL handler and dark mode in the container.
+- Optional microphone passthrough for both images through the host's PipeWire/PulseAudio socket, with `alsa-plugins-pulseaudio`, `pulseaudio-libs` and `sox` installed and the default ALSA device routed to that socket in `/etc/asound.conf`, documented in `Dockerfiles/README.md`.
 - `entrypoint.sh` for each image, with `copilot-vsc`/`claude-vsc` (default), `copilot-app`/`claude-app`, `copilot-cli`/`claude-cli`, `browser` and `terminal` sub-commands.
 - `Dockerfiles/vsc-settings.json` shared by both images, with Copilot settings listed before Claude Code settings.
+- `Dockerfiles/vsc-claude.json` with Claude Code settings for the Claude image, enabling voice dictation in tap mode by default.
 - `Dockerfiles/SETTINGS.md` with Claude Code and GitHub Copilot extension settings as tables, with ToC and references.
 - `Dockerfiles/README.md` with the Podman run command and per-image commands, and `Dockerfiles/SUB-COMMANDS.md`.
+- `README.md` note that the images are Linux containers only, since native Windows containers do not support GUI passthrough by design.
 - `README.md` with metadata, features, setup, usage, repository structure, Podman socket troubleshooting and example screenshots of both images.
 - `TO-DO.md` with the planned SELinux confinement of the container.
 - `.gitignore` excluding `Dockerfiles/PERSONAL.md`.
@@ -40,4 +43,5 @@ Template
 ### Security
 - Containers run with `--cap-drop=ALL`, `no-new-privileges` and `--userns=keep-id`, with only the selected folders mounted and `/run/user/1000` as an in-memory `tmpfs`.
 - `openssl3-libs` is installed in both images, so Visual Studio Code can verify extension signatures on Fedora 45+.
+- The optional PulseAudio socket mount gives the container access to all host audio devices, hence it is left out of the default `podman run` command.
 - Known issue: SELinux labelling is disabled with `--security-opt label=disable`, because the default labels block the Wayland socket and `/dev/dri`. Confinement is planned in `TO-DO.md`.

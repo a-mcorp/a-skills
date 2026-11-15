@@ -98,6 +98,10 @@ ENV GTK_THEME=Adwaita:dark
 # RUN dnf -y install dbus-daemon ptyxis && dnf clean all
 RUN dnf -y install foot && dnf clean all
 
+# Auto-generated: Microphone input through the host's PulseAudio socket, mounted in 'podman run'. The default ALSA device is pointed at that socket, since 'pipewire-alsa' would need the unmounted 'pipewire-0' socket.
+RUN dnf -y install alsa-plugins-pulseaudio pulseaudio-libs sox && dnf clean all \
+    && printf '%s\n' 'pcm.!default { type pulse }' 'ctl.!default { type pulse }' > /etc/asound.conf
+
 COPY --chmod=755 Claude/entrypoint.sh /usr/local/bin/entrypoint
 
 # Auto-generated: Run with '--userns=keep-id' so this UID maps to the host user and root inside the container is not root on the host.
@@ -109,7 +113,7 @@ RUN useradd -m -U -u "${UID}" -s /bin/bash agent \
 USER agent
 WORKDIR /workspaces
 RUN code --no-sandbox \
-    && mkdir -p /home/agent/.config/Code/User
+    && mkdir -p /home/agent/.config/Code/User /home/agent/.claude
 
 # Auto-generated: VS Code keeps up to 20 downloaded '.vsix' packages, so the copy is removed in the same 'RUN' as the install.
 RUN code --install-extension anthropic.claude-code \
@@ -117,6 +121,10 @@ RUN code --install-extension anthropic.claude-code \
 
 COPY --chown=agent:agent vsc-settings.json \
     /home/agent/.config/Code/User/settings.json
+
+# Auto-generated: Claude Code settings, enabling voice dictation in tap mode by default.
+COPY --chown=agent:agent vsc-claude.json \
+    /home/agent/.claude/settings.json
 
 ENTRYPOINT ["/usr/local/bin/entrypoint"]
 CMD ["claude-vsc"]

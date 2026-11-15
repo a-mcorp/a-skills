@@ -23,6 +23,8 @@
   - Only the chosen folders are mounted, and `/run/user/1000` is an in-memory `tmpfs` that disappears with the container.
   - `--security-opt label=disable` turns off SELinux labelling, because the default labels block the Wayland socket and `/dev/dri`, which the window needs. The isolation above still applies.
 - Native Wayland window passthrough, without X11.
+- Optional microphone passthrough via the host's PipeWire/PulseAudio socket, for voice input, per [Dockerfiles/README.md](Dockerfiles/README.md#microphone).
+![voice commands](askillsagent-podman-wayland-voice-dictation.png)
 - Pre-configured Visual Studio Code settings, documented in [SETTINGS.md](Dockerfiles/SETTINGS.md).
 
 ## Setup
@@ -30,6 +32,8 @@
   - None (Any OS, no isolation)
   - Gnome Boxes/VM (Linux, full isolation)
   - Podman/Container (Linux, full isolation)
+
+> **Note:** The images are Linux containers only, on both Linux and Windows hosts. GUI passthrough is not possible in native Windows containers by design ([Windows-Containers #306](https://github.com/microsoft/Windows-Containers/issues/306)).
 
 ### Installation
 - clone the repository <sub>duh</sub>
@@ -90,6 +94,7 @@ The skills can be used in one of the following modes:
 │   ├── Claude                 # Claude Code image and entrypoint
 │   ├── Copilot                # GitHub Copilot image and entrypoint
 │   ├── SETTINGS.md            # Visual Studio Code settings reference
+│   ├── vsc-claude.json        # Pre-loaded Claude Code settings
 │   └── vsc-settings.json      # Pre-loaded Visual Studio Code settings
 ├── AGENTS.md                  # Skill workflow for all agents
 └── CLAUDE.md                  # Imports AGENTS.md for Claude Code

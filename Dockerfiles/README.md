@@ -1,6 +1,7 @@
 # ToC
 - [ToC](#toc)
 - [Podman](#podman)
+  - [Microphone](#microphone)
   - [Commands](#commands)
     - [GitHub Copilot image](#github-copilot-image)
     - [Claude Code image](#claude-code-image)
@@ -30,13 +31,29 @@ podman run --rm -it --name askillsagent \
   -v "{host-path}/a-skills/.github:/workspaces/.github" \
   -v "{host-path}/a-skills/AGENTS.md:/workspaces/AGENTS.md" \
   -v "{host-path}/a-skills/CLAUDE.md:/workspaces/CLAUDE.md" \
-  docker.io/library/askillsagent copilot-vsc
+  docker.io/library/askillsagent
 ```
 Files may be dropped into the host's `$HOME/askillsagent` directory, or multiple different directories can be mounted under their own appropriate names.
 
 In this simple way entire working directories can be easily exposed to the agent ad-hoc, while making sure it does not crawl into every file of the host by default.
 
 > **Known issue:** The `--security-opt label=disable` flag turns off SELinux labelling for the container, because the default labels block access to the Wayland socket and `/dev/dri`, which the window needs. The container stays isolated by namespaces, dropped capabilities and `--userns=keep-id`.
+
+## Microphone
+Wayland does not carry audio, so the microphone is passed through the host's PulseAudio socket (served by `pipewire-pulse` on Fedora). In order to enable voice input (e.g. `/voice` in the Claude Code CLI, or dictation in the Visual Studio Code extension), add these two lines to the `podman run` command above, before the image name:
+
+```Bash
+  -e PULSE_SERVER=unix:/run/user/1000/pulse/native \
+  -v "$XDG_RUNTIME_DIR/pulse/native:/run/user/1000/pulse/native" \
+```
+
+Check that the microphone works inside the container with `rec -c 1 /tmp/test.wav` (stop with `Ctrl+C`), then play it back on the host or with `play /tmp/test.wav`.
+
+> **Warning:** The socket gives the container access to all of the host's audio inputs and outputs, at any time while it runs. Leave these lines out when voice input is not needed.
+
+The Claude Code image enables voice dictation in tap mode by default, via [vsc-claude.json](vsc-claude.json) copied to `~/.claude/settings.json`.
+
+> **Note:** Claude Code voice dictation needs a Claude.ai account login (not an API key), and it sends the recorded audio to Anthropic for transcription.
 
 ## Commands
 Each image starts one app as entrypoint (VSC by default), which may be overwritten by one of the entrypoint's options passed at the end of the `podman run` command (e.g. `copilot-cli` instead of `copilot-vsc`). The same entry options can be run in VSC's terminal inside a running container using the system paths and they are documented in the table below.
