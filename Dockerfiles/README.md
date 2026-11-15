@@ -14,7 +14,7 @@ There are two types of images:
 - Claude Code based agent
 - Copilot based agent
 
-Subsequently, in order to run a built image, run Podman with the following command (replace `copilot-vsc` with `claude-vsc` if using Claude Code instead):
+Subsequently, in order to run a built image, run Podman with the following command. It starts the image's default entrypoint (`copilot-vsc` or `claude-vsc`), see [Commands](#commands):
 
 ```Bash
 podman run --rm -it --name askillsagent \
@@ -70,7 +70,7 @@ Each image starts one app as entrypoint (VSC by default), which may be overwritt
 ### Claude Code image
 | Entrypoint | App | Direct command in the container |
 |---|---|---|
-| `claude-vsc` | Visual Studio Code | — |
+| `claude-vsc` (default) | Visual Studio Code | — |
 | `claude-app` | Claude Desktop App | `claude-desktop --no-sandbox --no-zygote --disable-gpu-sandbox --password-store=basic --ozone-platform=wayland` |
 | `claude-cli` | Claude Code CLI | `claude` |
 | `browser` | Firefox | `firefox` |

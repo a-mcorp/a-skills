@@ -33,7 +33,7 @@ Template
 - `Dockerfiles/vsc-settings.json` shared by both images, with Copilot settings listed before Claude Code settings.
 - `Dockerfiles/vsc-claude.json` with Claude Code settings for the Claude image, enabling voice dictation in tap mode by default.
 - `Dockerfiles/SETTINGS.md` with Claude Code and GitHub Copilot extension settings as tables, with ToC and references.
-- `Dockerfiles/README.md` with the Podman run command and per-image commands, and `Dockerfiles/SUB-COMMANDS.md`.
+- `Dockerfiles/README.md` with the Podman run command and per-image commands, and `Dockerfiles/PROMPTS.md`.
 - `README.md` note that the images are Linux containers only, since native Windows containers do not support GUI passthrough by design.
 - `README.md` with metadata, features, setup, usage, repository structure, Podman socket troubleshooting and example screenshots of both images.
 - `TO-DO.md` with the planned SELinux confinement of the container.

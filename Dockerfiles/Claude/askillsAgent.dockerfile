@@ -1,23 +1,29 @@
 # Fedora
+# Build context is 'Dockerfiles/'
 FROM registry.fedoraproject.org/fedora:latest
 
 # There are 3 types of 'Claude Code' apps
 # https://code.claude.com/docs/en/setup
 
-ARG DEB_ARCH=amd64
+ARG ARCH=amd64
 ARG UID=1000
-ARG CLAUDE_DESKTOP_REPO=https://downloads.claude.ai/claude-desktop/apt/stable
+ARG REPOSITORY_CLAUDE_DESKTOP=https://downloads.claude.ai/claude-desktop/apt/stable
+ARG REPOSITORY_CLAUDE_CODE=https://downloads.claude.ai/claude-code/rpm/stable
+ARG KEY_REPOSITORY_CLAUDE_CODE=https://downloads.claude.ai/keys/claude-code.asc
+ARG REPOSITORY_VSC=https://packages.microsoft.com/yumrepos/vscode
+ARG KEY_REPOSITORY_VSC=https://packages.microsoft.com/keys/microsoft.asc
+ARG REPOSITORY_FLATHUB=https://flathub.org/repo/flathub.flatpakrepo
 
 # Install Flatpak (which is normally included OOB)
 # Auto-generated: 'openssl3-libs' lets VS Code 'vsce-sign' verify extension signatures, as Fedora 45+ ships only OpenSSL 4.
-RUN dnf -y install curl dpkg flatpak openssl3-libs shadow-utils \
+RUN dnf -y install curl dpkg flatpak git openssl3-libs shadow-utils \
     && dnf clean all
 
 # Enable Flatpak repositories
 RUN flatpak remote-add --system --if-not-exists flathub \
-    https://flathub.org/repo/flathub.flatpakrepo
+    "$REPOSITORY_FLATHUB"
 
-# Install Chrome and Gearlevel for AppImages
+# Install Chrome and Gearlever for AppImages
 #RUN flatpak install --system --noninteractive flathub \
 #      com.google.Chrome it.mijorus.gearlever
 #RUN flatpak install --system --noninteractive flathub \
@@ -25,9 +31,9 @@ RUN flatpak remote-add --system --if-not-exists flathub \
 
 # Download Claude Desktop App (Linux beta ships only as .deb, so it is extracted without apt)
 RUN mkdir -p /opt/Downloads \
-    && DEB_PATH=$(curl -fsSL "$CLAUDE_DESKTOP_REPO/dists/stable/main/binary-${DEB_ARCH}/Packages" \
+    && DEB_PATH=$(curl -fsSL "$REPOSITORY_CLAUDE_DESKTOP/dists/stable/main/binary-${ARCH}/Packages" \
     | grep '^Filename: pool/main/c/claude-desktop/claude-desktop_' | sort -V | tail -n 1 | cut -d' ' -f2) \
-    && curl -fL "$CLAUDE_DESKTOP_REPO/$DEB_PATH" -o /opt/Downloads/claude-desktop.deb \
+    && curl -fL "$REPOSITORY_CLAUDE_DESKTOP/$DEB_PATH" -o /opt/Downloads/claude-desktop.deb \
     && dpkg-deb -x /opt/Downloads/claude-desktop.deb / \
     && rm -rf /opt/Downloads
 
@@ -35,12 +41,12 @@ RUN mkdir -p /opt/Downloads \
 RUN tee /etc/yum.repos.d/vscode.repo > /dev/null <<EOF
 [code]
 name=Visual Studio Code
-baseurl=https://packages.microsoft.com/yumrepos/vscode
+baseurl=$REPOSITORY_VSC
 enabled=1
 autorefresh=1
 type=rpm-md
 gpgcheck=1
-gpgkey=https://packages.microsoft.com/keys/microsoft.asc
+gpgkey=$KEY_REPOSITORY_VSC
 EOF
 
 RUN dnf -y install code \
@@ -50,10 +56,10 @@ RUN dnf -y install code \
 RUN tee /etc/yum.repos.d/claude-code.repo > /dev/null <<EOF
 [claude-code]
 name=Claude Code
-baseurl=https://downloads.claude.ai/claude-code/rpm/stable
+baseurl=$REPOSITORY_CLAUDE_CODE
 enabled=1
 gpgcheck=1
-gpgkey=https://downloads.claude.ai/keys/claude-code.asc
+gpgkey=$KEY_REPOSITORY_CLAUDE_CODE
 EOF
 
 RUN dnf -y install claude-code \
@@ -62,8 +68,6 @@ RUN dnf -y install claude-code \
 # Install and set Firefox as the default
 RUN dnf install -y firefox xdg-utils && \
     dnf clean all
-
-ENV BROWSER=firefox
 
 # Writing custom desktop entry handler for opening links with Firefox
 RUN printf '%s\n' \
@@ -83,7 +87,7 @@ RUN printf '%s\n' \
     'x-scheme-handler/vscode=code-container-url-handler.desktop' \
     > /etc/xdg/mimeapps.list
 
-# Essentially bypassing tab isolation/sandboxing in FIrefox, which does not work in Podman due to '--cap-drop=ALL and no-new-privileges' of container setup.
+# Essentially bypassing tab isolation/sandboxing in Firefox, which does not work in Podman due to '--cap-drop=ALL and no-new-privileges' of container setup.
 ENV BROWSER=firefox \
     MOZ_DISABLE_CONTENT_SANDBOX=1 \
     MOZ_DISABLE_RDD_SANDBOX=1 \

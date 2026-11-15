@@ -7,8 +7,11 @@ FROM registry.fedoraproject.org/fedora:latest
 
 ARG ARCH=x64
 ARG UID=1000
-ARG COPILOT_APP_URL=https://github.com/github/app/releases/latest/download/GitHub-Copilot-linux-${ARCH}.AppImage
+ARG URL_COPILOT_APP=https://github.com/github/app/releases/latest/download/GitHub-Copilot-linux-${ARCH}.AppImage
+ARG URL_COPILOT_CLI=https://gh.io/copilot-install
 ARG REPOSITORY_VSC=https://packages.microsoft.com/yumrepos/vscode
+ARG KEY_REPOSITORY_VSC=https://packages.microsoft.com/keys/microsoft.asc
+ARG REPOSITORY_FLATHUB=https://flathub.org/repo/flathub.flatpakrepo
 
 # Install Flatpak (which is normally included OOB)
 # Auto-generated: 'openssl3-libs' lets VS Code 'vsce-sign' verify extension signatures, as Fedora 45+ ships only OpenSSL 4.
@@ -17,9 +20,9 @@ RUN dnf -y install curl flatpak git openssl3-libs shadow-utils \
 
 # Enable Flatpak repositories
 RUN flatpak remote-add --system --if-not-exists flathub \
-    https://flathub.org/repo/flathub.flatpakrepo
+    "$REPOSITORY_FLATHUB"
 
-# Install Chrome and Gearlevel for AppImages
+# Install Chrome and Gearlever for AppImages
 #RUN flatpak install --system --noninteractive flathub \
 #      com.google.Chrome it.mijorus.gearlever
 #RUN flatpak install --system --noninteractive flathub \
@@ -31,7 +34,7 @@ RUN flatpak remote-add --system --if-not-exists flathub \
 #    --integrate "$HOME/Downloads/GitHub-Copilot-Desktop.AppImage" -y
 # Auto-generated: Download, extraction and removal of the AppImage share one 'RUN', so the AppImage is not kept in any image layer.
 RUN mkdir -p /opt/Downloads && \
-    curl -fL "$COPILOT_APP_URL" \
+    curl -fL "$URL_COPILOT_APP" \
     -o /opt/Downloads/GitHub-Copilot-Desktop.AppImage && \
     chmod 755 /opt/Downloads/GitHub-Copilot-Desktop.AppImage \
     && cd /opt && /opt/Downloads/GitHub-Copilot-Desktop.AppImage --appimage-extract >/dev/null \
@@ -45,25 +48,23 @@ RUN mkdir -p /opt/Downloads && \
 RUN tee /etc/yum.repos.d/vscode.repo > /dev/null <<EOF
 [code]
 name=Visual Studio Code
-baseurl=https://packages.microsoft.com/yumrepos/vscode
+baseurl=$REPOSITORY_VSC
 enabled=1
 autorefresh=1
 type=rpm-md
 gpgcheck=1
-gpgkey=https://packages.microsoft.com/keys/microsoft.asc
+gpgkey=$KEY_REPOSITORY_VSC
 EOF
 
 RUN dnf -y install code \
     && dnf clean all
 
 # Install GitHub Copilot CLI
-RUN curl -fsSL https://gh.io/copilot-install | PREFIX=/usr/local bash
+RUN curl -fsSL "$URL_COPILOT_CLI" | PREFIX=/usr/local bash
 
 # Install and set Firefox as the default
 RUN dnf install -y firefox xdg-utils && \
     dnf clean all
-
-ENV BROWSER=firefox
 
 # Writing custom desktop entry handler for opening links with Firefox
 RUN printf '%s\n' \
@@ -83,7 +84,7 @@ RUN printf '%s\n' \
     'x-scheme-handler/vscode=code-container-url-handler.desktop' \
     > /etc/xdg/mimeapps.list
 
-# Essentially bypassing tab isolation/sandboxing in FIrefox, which does not work in Podman due to '--cap-drop=ALL and no-new-privileges' of container setup.
+# Essentially bypassing tab isolation/sandboxing in Firefox, which does not work in Podman due to '--cap-drop=ALL and no-new-privileges' of container setup.
 ENV BROWSER=firefox \
     MOZ_DISABLE_CONTENT_SANDBOX=1 \
     MOZ_DISABLE_RDD_SANDBOX=1 \

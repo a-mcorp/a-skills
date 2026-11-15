@@ -15,7 +15,7 @@
 ## Features
 - Bundled skills:
   - 'style': answer length, text formatting, comments, references, `CHANGELOG.md` and `CODEOWNERS` conventions.
-  - 'ops': naming notation and Terraform conventions.
+  - 'ops': naming notation, Terraform and Python conventions.
   - 'obsidian': Obsidian Markdown conventions.
 - Two container images: GitHub Copilot and Claude Code, each with Visual Studio Code, the desktop app and the CLI.
 - Hardened container: runs with `--cap-drop=ALL` and `no-new-privileges`, with only the selected folders mounted.
@@ -72,7 +72,7 @@ The skills can be used in one of the following modes:
     - The setup of the VM is on the Operator. This repository does not cover it.
     - This option supports simple host-mirrored configuration of the IDE and support software, along with compatibility with immutable distributions and Flatpaks.
   - Podman (container)
-    - In this mode the skills in this repository can be used inside a container. Podman may build one of the included `.Dockerfile` images:
+    - In this mode the skills in this repository can be used inside a container. Podman may build one of the included `.dockerfile` images:
       - GitHub Copilot: Visual Studio Code with the GitHub Copilot extension, the GitHub Copilot App and the GitHub Copilot CLI.
       - Claude Code: Visual Studio Code with the Claude Code extension, the Claude Desktop App and the Claude Code CLI.
     - This is most likely the ideal solution, as folders can be mounted directly to the container, while leveraging the native Wayland display server. The concept offers supreme convenience at low risk.
@@ -86,18 +86,22 @@ The skills can be used in one of the following modes:
 ├── .github
 │   ├── skills
 │   │   ├── obsidian           # Obsidian Markdown conventions
-│   │   ├── ops                # Naming notation, Terraform
+│   │   ├── ops                # Naming notation, Terraform, Python
 │   │   └── style              # General styling rules
 │   ├── CHANGELOG_TEMPLATE     # Template for CHANGELOG.md
-│   └── CODEOWNERS_TEMPLATE    # Template for CODEOWNERS
+│   ├── CODEOWNERS_TEMPLATE    # Template for CODEOWNERS
+│   ├── PULL_REQUEST_TEMPLATE  # Templates for pull requests
+│   └── pull_request_template.md # Default pull request template
 ├── Dockerfiles
 │   ├── Claude                 # Claude Code image and entrypoint
 │   ├── Copilot                # GitHub Copilot image and entrypoint
+│   ├── PROMPTS.md             # Prompts for maintaining the settings files
 │   ├── SETTINGS.md            # Visual Studio Code settings reference
 │   ├── vsc-claude.json        # Pre-loaded Claude Code settings
 │   └── vsc-settings.json      # Pre-loaded Visual Studio Code settings
 ├── AGENTS.md                  # Skill workflow for all agents
-└── CLAUDE.md                  # Imports AGENTS.md for Claude Code
+├── CLAUDE.md                  # Imports AGENTS.md for Claude Code
+└── TO-DO.md                   # Planned work, as user stories
 ```
 
 ## Example

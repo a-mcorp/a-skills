@@ -17,7 +17,7 @@ case "$command" in
     exec /usr/share/code/code --wait "${F[@]}" --extensions-download-dir=/tmp/vsc-vsix "${args[@]}"
     ;;
   claude-app)
-    exec claude-desktop "${F[@]}" "$@"
+    exec claude-desktop "${F[@]}" --no-zygote "$@"
     ;;
   claude-cli)
     exec claude "$@"
