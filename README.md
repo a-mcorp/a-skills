@@ -30,7 +30,7 @@
 ## Setup
 ### Dependencies
   - None (Any OS, no isolation)
-  - Gnome Boxes/VM (Linux, full isolation)
+  - GNOME Boxes/VM (Linux, full isolation)
   - Podman/Container (Linux, full isolation)
 
 > **Note:** The images are Linux containers only, on both Linux and Windows hosts. GUI passthrough is not possible in native Windows containers by design ([Windows-Containers #306](https://github.com/microsoft/Windows-Containers/issues/306)).
@@ -43,7 +43,7 @@
 - (optionally) adjust Visual Studio Code settings per the `settings.json` snippet (pre-loaded automatically for the container-sandboxed agent).
   - **these settings are overwritten by the user-specific `settings.json` file synchronised from the logged-in user!**
 #### Linux-only
-- (optionally) install Gnome Boxes (e.g. Flathub)
+- (optionally) install GNOME Boxes (e.g. Flathub)
 - (optionally) install Podman Desktop (e.g. Flathub)
   - check whether the Podman socket is running
     - `systemctl --user enable podman.socket`
@@ -67,8 +67,8 @@ To add a custom skill, create a new folder under `.github/skills/` with a `SKILL
 The skills can be used in one of the following modes:
   - 'no isolation'
     - In this mode the skills in this repository can be used as-is and the agents roam free across the entire host operating system, performing the magic of `rm` or the like on random files :thumbsup:
-  - Gnome Boxes
-    - In this mode the skills in this repository can be used inside a VM. Gnome Boxes offers the majority of Linux distributions in a drop-down list. The operator can select which files on the host are shared with the guest OS. This is **not** a very performant setup, as there are significant lag and I/O issues when operating inside the guest OS's VSC and CLIs. Mostly a 'click-ops' type of setup.
+  - GNOME Boxes
+    - In this mode the skills in this repository can be used inside a VM. GNOME Boxes offers the majority of Linux distributions in a drop-down list. The operator can select which files on the host are shared with the guest OS. This is **not** a very performant setup, as there are significant lag and I/O issues when operating inside the guest OS's VSC and CLIs. Mostly a 'click-ops' type of setup.
     - The setup of the VM is on the Operator. This repository does not cover it.
     - This option supports simple host-mirrored configuration of the IDE and support software, along with compatibility with immutable distributions and Flatpaks.
   - Podman (container)
@@ -125,7 +125,7 @@ A Visual Studio Code instance after logging in, with user's `settings.json`.
     'ls -l $XDG_RUNTIME_DIR/podman/; flatpak-spawn --host podman --version'
   ```
 - test if there are any stale connections using `podman system connection list`
-- if nothing seems wrong, then congrats. Perhaps, like me, you managed to spawn so many processes on the OS that the system has random issues. I occasionally experience this in GitKraken's ["file watching failed to start for this repository"](https://help.gitkraken.com/gitkraken-desktop/common-issues/#file-watching-failed-to-start) error, but also in Gnome system monitor's "Unable to find default local file monitor type".
+- if nothing seems wrong, then congrats. Perhaps, like me, you managed to spawn so many processes on the OS that the system has random issues. I occasionally experience this in GitKraken's ["file watching failed to start for this repository"](https://help.gitkraken.com/gitkraken-desktop/common-issues/#file-watching-failed-to-start) error, but also in GNOME System Monitor's "Unable to find default local file monitor type".
 - close some VSC instances or browser windows, or restart the host. Essentially increase `fs.inotify.max_user_watches` and `fs.inotify.max_user_instances`, per my [article](https://blog.amatthew.eu/diagnosing-podman-desktop).
 
 </details>
