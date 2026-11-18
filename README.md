@@ -8,7 +8,7 @@
 - Purpose: Enforcing agent skills in a windowed sandbox.
 - Format: Docker Container / Agent Skills framework.
 - License:
-  - This project's license: [GNU General Public License v3.0](LICENSE.md)
+  - This project's license: [GNU Affero General Public License v3.0](LICENSE.md), with additional terms (attribution, name) in [NOTICE](NOTICE.md); Copyright © 2026 Mateusz Adamczyk (M.A.)
   <!-- - Dependency-1: [{dependency-name}({license-1-name})] -->
   <!-- - Dependency-2: [{dependency-name}({license-2-name})] -->
 

@@ -1,6 +1,7 @@
 # ToC
 - [ToC](#toc)
 - [Podman](#podman)
+  - [Operator](#operator)
   - [Microphone](#microphone)
   - [Commands](#commands)
     - [GitHub Copilot image](#github-copilot-image)
@@ -38,6 +39,13 @@ Files may be dropped into the host's `$HOME/askillsagent` directory, or multiple
 In this simple way entire working directories can be easily exposed to the agent ad-hoc, while making sure it does not crawl into every file of the host by default.
 
 > **Known issue:** The `--security-opt label=disable` flag turns off SELinux labelling for the container, because the default labels block access to the Wayland socket and `/dev/dri`, which the window needs. The container stays isolated by namespaces, dropped capabilities and `--userns=keep-id`.
+
+## Operator
+The `A_SKILLS_OPERATOR` variable selects the engram - your own custom assistant - loaded from `.github/skills/engrams`; left empty or unset, none is loaded. In order to set it, add this line to the `podman run` command above, before the image name:
+
+```Bash
+  -e A_SKILLS_OPERATOR={engram} \
+```
 
 ## Microphone
 Wayland does not carry audio, so the microphone is passed through the host's PulseAudio socket (served by `pipewire-pulse` on Fedora). In order to enable voice input (e.g. `/voice` in the Claude Code CLI, or dictation in the Visual Studio Code extension), add these two lines to the `podman run` command above, before the image name:

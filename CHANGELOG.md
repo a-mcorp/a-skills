@@ -16,6 +16,10 @@ Template
 ### Security
 -->
 
+## [Unreleased] - 2026-11-18
+### Changed
+- Licence changed to AGPL-3.0-or-later, with the copyright and additional section 7 terms (attribution, name) in `NOTICE.md`; `LICENSE.md` previously held the LGPL-3.0 text, which contradicted the GPL-3.0 stated in `README.md`.
+
 ## [1.0.0] - 2026-11-12
 ### Added
 - `style` skill with `Cloud`, `Comment`, `Reference`, `Codeowners`, `Changelog`, `Planning` and `Security` extensions.
