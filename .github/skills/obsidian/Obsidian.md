@@ -22,7 +22,7 @@
 - Do not use `Comments` in Markdown files. Do not modify existing comments.
 - Do not use `Canvas`.
 - Do not use `Bases`.
-- Prioritise not using `Tables`.
+- Prefer lists for simple data, as they are easier to work with. Use `Tables` where they save space or give a clearer view, e.g. dimensions or parts with several values each, or where a template defines them.
 - Prioritise not using `Task lists`, unless specified in any of the templates in the `Templates` folder.
 - Prioritise not using `Strikethroughs`.
 - Do not use `Mermaid` diagrams unless explicitly requested to generate diagrams.

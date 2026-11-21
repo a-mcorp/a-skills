@@ -19,6 +19,8 @@ Template
 ## [Unreleased] - 2026-11-18
 ### Changed
 - Licence changed to AGPL-3.0-or-later, with the copyright and additional section 7 terms (attribution, name) in `NOTICE.md`; `LICENSE.md` previously held the LGPL-3.0 text, which contradicted the GPL-3.0 stated in `README.md`.
+- `AGENTS.md`: an engram can also be a folder, with a `core.md` read in every session and extensions read only when their topic comes up.
+- `obsidian` skill: tables are allowed where they save space or give a clearer view, or where a template defines them; lists stay preferred for simple data.
 
 ## [1.0.0] - 2026-11-12
 ### Added
