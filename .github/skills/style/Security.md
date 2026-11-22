@@ -1,4 +1,4 @@
-<!-- This skills bundle has been generated using 'A-Skills' (https://github.com/a-matthew/a-skills). -->
+<!-- This skills bundle has been generated using 'A-Skills' (https://github.com/a-mcorp/a-skills). -->
 # Security conventions
 
 ## Semantic:

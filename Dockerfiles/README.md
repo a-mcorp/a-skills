@@ -1,10 +1,12 @@
 # ToC
 - [ToC](#toc)
 - [Podman](#podman)
+  - [Operator](#operator)
   - [Microphone](#microphone)
   - [Commands](#commands)
     - [GitHub Copilot image](#github-copilot-image)
     - [Claude Code image](#claude-code-image)
+  - [Hardware image](#hardware-image)
 - [Extensions](#extensions)
 
 # Podman
@@ -38,6 +40,13 @@ Files may be dropped into the host's `$HOME/askillsagent` directory, or multiple
 In this simple way entire working directories can be easily exposed to the agent ad-hoc, while making sure it does not crawl into every file of the host by default.
 
 > **Known issue:** The `--security-opt label=disable` flag turns off SELinux labelling for the container, because the default labels block access to the Wayland socket and `/dev/dri`, which the window needs. The container stays isolated by namespaces, dropped capabilities and `--userns=keep-id`.
+
+## Operator
+The `A_SKILLS_OPERATOR` variable selects the 'engram' - your own custom assistant - loaded from `.github/skills/engrams`; left empty or unset, none is loaded. In order to set it, add this line to the `podman run` command above, before the image name:
+
+```Bash
+  -e A_SKILLS_OPERATOR={engram} \
+```
 
 ## Microphone
 Wayland does not carry audio, so the microphone is passed through the host's PulseAudio socket (served by `pipewire-pulse` on Fedora). In order to enable voice input (e.g. `/voice` in the Claude Code CLI, or dictation in the Visual Studio Code extension), add these two lines to the `podman run` command above, before the image name:
@@ -83,6 +92,27 @@ Each image starts one app as entrypoint (VSC by default), which may be overwritt
 The GitHub Copilot CLI (`copilot`), the GitHub Copilot App (`copilot-app`) and the Claude Code CLI (`claude`) start without any extra parameters.
 
 > **Known issue:** the Claude Desktop App is the only exception in this image. It needs the `--no-sandbox`, `--no-zygote` and `--disable-gpu-sandbox` flags, because the container's `--cap-drop=ALL` and `no-new-privileges` options prevent the Chromium sandbox from starting. Without them, it fails with "Zygote process exited prematurely with exit code -1".
+
+## Hardware image
+An optional layer on top of the Claude Code image, for hardware projects: OpenSCAD (the AppImage from its GitHub release, with the fast Manifold backend), F3D for viewing STL and 3MF files, `admesh` for checking them, `exiftool` for photo metadata, `poppler-utils` for PDF datasheets and drawings, Pillow for photos, `time`, and a PDF viewer in Visual Studio Code. Build the Claude Code image first, then:
+
+```Bash
+podman build --pull=never -f Dockerfiles/Claude/hardware.dockerfile \
+  -t docker.io/library/askillsagent-hardware Dockerfiles/
+```
+
+`--pull=never` makes sure the build uses the local Claude Code image and never looks it up on a registry. Run it with the `podman run` command above, replacing only the image name with `docker.io/library/askillsagent-hardware`. The entrypoints are the same as in the Claude Code image.
+
+The OpenSCAD version is set by `OPENSCAD_VERSION` and checked against `OPENSCAD_SHA256` at the top of the file; change both for a newer release. OpenSCAD renders and writes PNG previews without a window, e.g.:
+
+```Bash
+openscad --backend=manifold -D 'part="back"' -o back.stl cad/enclosure.scad
+openscad -D 'part="back"' --viewall --autocenter --imgsize=1200,1200 -o back.png cad/enclosure.scad
+```
+
+> **Note:** OpenSCAD runs from the command line only. The AppImage bundles Qt 6.2 with an X11 plugin and no Wayland one, so its window cannot open in this Wayland-only container; edit in OpenSCAD on the host, while the container renders, checks and previews.
+
+> **Note:** the `askillsagent-home` volume keeps the extensions it already holds, so the PDF viewer only appears in a new volume, or after installing it once with `code --install-extension tomoki1207.pdf`.
 
 # Extensions
 In order to adjust `vsc-settings.json` either have a look personally into the [SETTINGS.md](SETTINGS.md) file, where all up-to-date (more or less) settings for both Claude and Copilot are defined, or task the agent with updating it itself.

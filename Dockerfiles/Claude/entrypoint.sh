@@ -1,4 +1,11 @@
 #!/usr/bin/env bash
+# ================================
+# Name: 'a-skills'/Dockerfiles/Claude/entrypoint.sh
+# Source: https://github.com/a-mcorp/a-skills
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Year: 2026
+# ================================
+
 set -euo pipefail
 
 # Start a D-Bus session, then reruns the script inside. Requirement for Ptyxis
