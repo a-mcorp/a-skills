@@ -21,15 +21,16 @@
 
 ## Technical:
 - If the `CHANGELOG.md` file is missing and a template exists under the `.github/CHANGELOG_TEMPLATE` directory, then use it for creating the `CHANGELOG.md` file.
+- A new project created from a template repository keeps its own history only: when its `CHANGELOG.md` still holds the template's versions, replace it with the template under `.github/CHANGELOG_TEMPLATE`. The project's first release may name the template and its version it was created from.
 - If a `CHANGELOG.md` file already exists and the compliant template also exists, then update the `CHANGELOG.md` file according to the template and the scope of changes in the current branch's commits.
 - If current changes are a part of a `git tag` not yet present on the remote, then use that tag as the `version` sub-header.
 - If such a tag does not exist, then treat all new changes as belonging to the `Unreleased` sub-header, which is put before the latest `version` sub-header.
 - The `Unreleased` sub-header uses the current date.
 - Should a `git tag` appear after the most recent `version`, the `Unreleased` changes are moved into that tag's sub-header (version).
-- The scope of project updates summarised in the file must reflect all commits in the current branch. Hence, notify the Operator if there is a discrepancy.
+- The scope of project updates summarised in the file must reflect all commits in the current branch. Notify the Operator of any discrepancy.
 - Do not update the `CHANGELOG.md` file if the current work branch is set to any of: `develop`, `dev`, `main`, `production`, `master`, `release`, or `develop/*`, `dev/*`, `main/*`, `production/*`, `master/*`, `release/*`, unless explicitly requested to do so.
-- If the current work branch is set to any of: `develop`, `dev`, `main`, `production`, `master`, `release`, or `develop/*`, `dev/*`, `main/*`, `production/*`, `master/*`, `release/*` and the `CHANGELOG.md` seems outdated, then point out this fact to the Operator and ask how to proceed.
-- If neither the `CHANGELOG.md` file nor a template under the `.github/CHANGELOG_TEMPLATE` directory exists, then do not create the file automatically, but rather point this out to the Operator and ask how to proceed.
+- If the current work branch is set to any of: `develop`, `dev`, `main`, `production`, `master`, `release`, or `develop/*`, `dev/*`, `main/*`, `production/*`, `master/*`, `release/*` and the `CHANGELOG.md` appears outdated, then point this out to the Operator and ask how to proceed.
+- If neither the `CHANGELOG.md` file nor a template under the `.github/CHANGELOG_TEMPLATE` directory exists, then do not create the file automatically; point this out to the Operator and ask how to proceed.
 - The template may take precedence over directives in this skill, but should remain largely consistent with them. If conflicting directives are defined within the template, use the directives from the template.
 - If a `CHANGELOG.md` file exists and the template under the `.github/CHANGELOG_TEMPLATE` directory also exists, but is incompatible, then notify the Operator of the conflict and ask how to proceed.
 - If a `CHANGELOG.md` file incompatible with the directives exists, then notify the Operator of the conflict. Otherwise, compatible files should be processed as defined by the directives.

@@ -42,7 +42,7 @@ In this simple way entire working directories can be easily exposed to the agent
 > **Known issue:** The `--security-opt label=disable` flag turns off SELinux labelling for the container, because the default labels block access to the Wayland socket and `/dev/dri`, which the window needs. The container stays isolated by namespaces, dropped capabilities and `--userns=keep-id`.
 
 ## Operator
-The `A_SKILLS_OPERATOR` variable selects the engram - your own custom assistant - loaded from `.github/skills/engrams`; left empty or unset, none is loaded. In order to set it, add this line to the `podman run` command above, before the image name:
+The `A_SKILLS_OPERATOR` variable selects the 'engram' - your own custom assistant - loaded from `.github/skills/engrams`; left empty or unset, none is loaded. In order to set it, add this line to the `podman run` command above, before the image name:
 
 ```Bash
   -e A_SKILLS_OPERATOR={engram} \

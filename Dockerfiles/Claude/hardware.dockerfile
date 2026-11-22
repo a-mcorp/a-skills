@@ -1,3 +1,10 @@
+# ================================
+# Name: 'a-skills'/Dockerfiles/Claude/hardware.dockerfile
+# Source: https://github.com/a-mcorp/a-skills
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Year: 2026
+# ================================
+
 # Fedora - hardware tools on top of the Claude Code image
 # Build context is 'Dockerfiles/'; build the Claude Code image first (see README.md)
 ARG BASE_IMAGE=docker.io/library/askillsagent

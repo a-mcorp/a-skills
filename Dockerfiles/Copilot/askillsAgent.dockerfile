@@ -1,3 +1,10 @@
+# ================================
+# Name: 'a-skills'/Dockerfiles/Copilot/askillsAgent.dockerfile
+# Source: https://github.com/a-mcorp/a-skills
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Year: 2026
+# ================================
+
 # Fedora
 # Build context is 'Dockerfiles/'
 FROM registry.fedoraproject.org/fedora:latest

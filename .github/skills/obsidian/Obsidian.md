@@ -10,19 +10,19 @@
 ## Technical:
 - Always look up the `Templates` folder in the main directory, then apply the appropriate template, if one exists, when creating a new file. Ask the Operator for input when the choice remains unclear.
 - Always write down the content of files in proper Markdown syntax.
-- Use `Wikilinks` when referencing other INTERNAL files.
+- Use `Wikilinks` when referencing other internal files.
 - Use `Embeds` for images.
-- If the `Templates` folder contains a special file called `Callouts.md`, then always structure a new or currently edited file according to the `Callouts` defined in that file. Estimate which paragraphs belong under which `Callout`.
+- If the `Templates` folder contains a special file called `Callouts.md`, then always structure a new or currently edited file according to the `Callouts` defined in that file. Assign each paragraph to the matching `Callout`.
 - Always put `Callouts` under the paragraphs they refer to, unless they belong to an item list. In such a case, put them under the list in chronological order, as they cannot be placed directly under the list's individual items.
 - If the `Templates` folder contains a special file called `Properties.md`, then always define those properties in every new file, or adjust the existing files to follow the same convention.
 - If the `Templates` folder contains a special file called `Tags.md`, then only prefill appropriate file properties (as defined by the `Properties.md` template) with tags defined in the `Tags.md` file.
 - If the `Templates` folder contains a special file called `References.md`, then use the quotation system described in that file. Apply it to quotations of technical facts (documentation) or statements.
-- Every new or updated file is created with the file name's first letter being in `uppercase`.
+- Start the names of new or updated files with an uppercase letter.
 - If the `Templates` folder contains a special file called `Sync.md`, then use the `Obsidian Sync` rules defined inside. Apply those file naming conventions towards new or actively updated files. Only apply these rules retroactively to pre-existing files if asked by the Operator.
 - Do not use `Comments` in Markdown files. Do not modify existing comments.
 - Do not use `Canvas`.
 - Do not use `Bases`.
-- Prefer lists for simple data, as they are easier to work with. Use `Tables` where they save space or give a clearer view, e.g. dimensions or parts with several values each, or where a template defines them.
-- Prioritise not using `Task lists`, unless specified in any of the templates in the `Templates` folder.
-- Prioritise not using `Strikethroughs`.
+- Prefer lists for simple data, as they are easier to work with. Use `Tables` where they save space or give a clearer view, or where a template defines them.
+- Avoid `Task lists`, unless a template in the `Templates` folder uses them.
+- Avoid `Strikethroughs`.
 - Do not use `Mermaid` diagrams unless explicitly requested to generate diagrams.
