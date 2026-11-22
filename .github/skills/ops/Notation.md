@@ -1,4 +1,4 @@
-<!-- This skills bundle has been generated using 'A-Skills' (https://github.com/a-matthew/a-skills). -->
+<!-- This skills bundle has been generated using 'A-Skills' (https://github.com/a-mcorp/a-skills). -->
 # Naming conventions
 
 ## Semantic:
@@ -12,6 +12,9 @@
 - When the programming language does not natively support static typing, yet this form of typing is officially supported using type annotations and guardrails, treat such a language as one of the natively statically typed programming languages. Example: Python.
 - TERRAFORM AND DERIVATIVES: This rule partially applies to certain statically typed languages (such as HCL), where the suffix should only define the collection type of the object. An object with a one-dimensional index should be suffixed with '_list', '_set' or '_map', while objects with an index of two or more dimensions are suffixed with '_object'. The exact form of the suffixes should remain compatible with the guidelines of the language.
 - TERRAFORM AND DERIVATIVES: When working with one of the `ops` tools, such as Terraform, the `primary word` is always the name of the `deployment` that the `object`, `variable`, `local`, `input`, `output` (and so on) belongs to. Example: a `local` value in Terraform defining a `list` of `Storage Account` names within the 'FrontEnd' deployment must be named 'frontend_st_list'.
+- Entry-point functions follow the same scheme and are named after what the script does, as a script may also act as a module that carries out one function. Example: 'bom_generate', not 'main'.
+- Write every word of a name in full, without abbreviations (e.g. 'cost_low', not 'lo'; 'dimensions', not 'dims'; 'row', not 'r'). Only widely known abbreviations and acronyms stay (e.g. 'csv', 'url', 'id', 'md').
+- Name a collection in the plural and each of its items in the singular. Example: 'for dimension in dimensions', 'for row in rows_bom'.
 - When working with class-specific variables, the `primary word` is always the direct class name, preceded by its parent classes (in top-down order), if any exist. Example: a constant referencing the maximum height of the class `cat`, derived from the class `animals`, must be written as 'animals_cat_height'.
 
 ## Technical:

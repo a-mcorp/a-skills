@@ -6,6 +6,7 @@
   - [Commands](#commands)
     - [GitHub Copilot image](#github-copilot-image)
     - [Claude Code image](#claude-code-image)
+  - [Hardware image](#hardware-image)
 - [Extensions](#extensions)
 
 # Podman
@@ -91,6 +92,27 @@ Each image starts one app as entrypoint (VSC by default), which may be overwritt
 The GitHub Copilot CLI (`copilot`), the GitHub Copilot App (`copilot-app`) and the Claude Code CLI (`claude`) start without any extra parameters.
 
 > **Known issue:** the Claude Desktop App is the only exception in this image. It needs the `--no-sandbox`, `--no-zygote` and `--disable-gpu-sandbox` flags, because the container's `--cap-drop=ALL` and `no-new-privileges` options prevent the Chromium sandbox from starting. Without them, it fails with "Zygote process exited prematurely with exit code -1".
+
+## Hardware image
+An optional layer on top of the Claude Code image, for hardware projects: OpenSCAD (the AppImage from its GitHub release, with the fast Manifold backend), F3D for viewing STL and 3MF files, `admesh` for checking them, `exiftool` for photo metadata, `poppler-utils` for PDF datasheets and drawings, Pillow for photos, `time`, and a PDF viewer in Visual Studio Code. Build the Claude Code image first, then:
+
+```Bash
+podman build --pull=never -f Dockerfiles/Claude/hardware.dockerfile \
+  -t docker.io/library/askillsagent-hardware Dockerfiles/
+```
+
+`--pull=never` makes sure the build uses the local Claude Code image and never looks it up on a registry. Run it with the `podman run` command above, replacing only the image name with `docker.io/library/askillsagent-hardware`. The entrypoints are the same as in the Claude Code image.
+
+The OpenSCAD version is set by `OPENSCAD_VERSION` and checked against `OPENSCAD_SHA256` at the top of the file; change both for a newer release. OpenSCAD renders and writes PNG previews without a window, e.g.:
+
+```Bash
+openscad --backend=manifold -D 'part="back"' -o back.stl cad/enclosure.scad
+openscad -D 'part="back"' --viewall --autocenter --imgsize=1200,1200 -o back.png cad/enclosure.scad
+```
+
+> **Note:** OpenSCAD runs from the command line only. The AppImage bundles Qt 6.2 with an X11 plugin and no Wayland one, so its window cannot open in this Wayland-only container; edit in OpenSCAD on the host, while the container renders, checks and previews.
+
+> **Note:** the `askillsagent-home` volume keeps the extensions it already holds, so the PDF viewer only appears in a new volume, or after installing it once with `code --install-extension tomoki1207.pdf`.
 
 # Extensions
 In order to adjust `vsc-settings.json` either have a look personally into the [SETTINGS.md](SETTINGS.md) file, where all up-to-date (more or less) settings for both Claude and Copilot are defined, or task the agent with updating it itself.
