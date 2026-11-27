@@ -16,6 +16,16 @@ Template
 ### Security
 -->
 
+## [2.1.0] - 2026-11-27
+### Added
+- `style` skill, `Contributing`: two branching strategies - trunk-based (squashed Pull Requests into `trunk`) and Gitflow (squashed into `develop`, merged into `main`) - with trunk-based as the default.
+- `ops` skill: inputs are required rather than given defaults inside scripts, modules or actions; a needed default is declared once, at the entry point.
+- `ops` skill, `Notation`: the naming scheme also applies to files and generated artefacts - named from the component to the part and its kind, and identical to the identifier that produces them.
+- `hardware` skill, `Printing`: large round openings keep their shape with a small peak, openings are cut perpendicular to the wall, and components under a printed part get a margin for print tolerance.
+- `hardware` skill: previews rendered in the orientation the Operator sees the part from; `Printing`: ergonomics prioritised where possible.
+- `hardware` skill, `Dimensions`: a warning to measure fragile parts without calipers where possible, and readings checked against each other before use.
+- `Dockerfiles/README.md`: `--tz=local` in the `podman run` command, so the container follows the host's time zone; a zone name sets another one.
+
 ## [2.0.1] - 2026-11-22
 ### Fixed
 - `CHANGELOG.md`: the 2.0.0 entry condensed, as in its Pull Request.

@@ -16,8 +16,10 @@
 - Write every word of a name in full, without abbreviations (e.g. 'length', not 'len'; 'index', not 'i'). Only widely known abbreviations and acronyms stay (e.g. 'csv', 'url', 'id', 'md').
 - Name a collection in the plural and each of its items in the singular. Example: 'for book in books'.
 - When working with class-specific variables, the `primary word` is always the direct class name, preceded by its parent classes (in top-down order), if any exist. Example: a constant referencing the maximum height of the class `cat`, derived from the class `animals`, must be written as 'animals_cat_height'.
+- Apply the same scheme to the names of files and generated artefacts (exports, renders, assets). Start with the most general component the file belongs to, follow it with the part, and end with the part's variant or kind, so that the files of one component sort together and can be found by their component alone.
+- Keep the name of a generated file identical to the identifier that produces it (such as a parameter selecting the part to export), apart from a prefix shared by all files of the same source.
 
 ## Technical:
 - This convention was authored by 'Mateusz Adamczyk'. It is derived from certain semantic rules of the Polish and German languages, and influenced by `Hungarian notation` and The Ohio State University's "File Naming Convention Best Practices" guide.
-- This convention applies to programming languages and similar Turing-complete tools, as well as declarative configuration language families (such as HCL).
+- This convention applies to programming languages and similar Turing-complete tools, as well as declarative configuration language families (such as HCL), and to the names of files and generated artefacts.
 - Always prioritise language-specific guidelines where they exist, and apply this convention only as a non-conflicting extension of them.

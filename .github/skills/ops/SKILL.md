@@ -10,6 +10,7 @@ description: Enforce the general operations guidelines.
 - OTHER LANGUAGES: Inform the Operator when the language-specific guidelines are not clear.
 
 # Technical
+- Require inputs rather than declaring default values inside scripts, modules or actions, so that a missing input stops the run. Where a default is needed, declare it once, at the entry point.
 - Use the Operator's convention whenever possible, as long as it does not directly conflict with an otherwise unaccounted-for guideline of the programming language. In such a case, inform the Operator of the conflict.
 
 # Extensions

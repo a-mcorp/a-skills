@@ -1,6 +1,7 @@
 # ToC
 - [ToC](#toc)
 - [Podman](#podman)
+  - [Time Zone](#time-zone)
   - [Operator](#operator)
   - [Microphone](#microphone)
   - [Commands](#commands)
@@ -22,7 +23,7 @@ Subsequently, in order to run a built image, run Podman with the following comma
 podman run --rm -it --name askillsagent \
   --userns=keep-id:uid=1000,gid=1000 \
   --cap-drop=ALL --security-opt=no-new-privileges --security-opt label=disable \
-  --device /dev/dri --shm-size=1g --hostname sandbox \
+  --device /dev/dri --shm-size=1g --hostname sandbox --tz=local \
   --mount type=tmpfs,destination=/run/user/1000,tmpfs-mode=0700,U=true \
   -e WAYLAND_DISPLAY -e XDG_RUNTIME_DIR=/run/user/1000 \
   -v "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY:/run/user/1000/$WAYLAND_DISPLAY" \
@@ -40,6 +41,9 @@ Files may be dropped into the host's `$HOME/askillsagent` directory, or multiple
 In this simple way entire working directories can be easily exposed to the agent ad-hoc, while making sure it does not crawl into every file of the host by default.
 
 > **Known issue:** The `--security-opt label=disable` flag turns off SELinux labelling for the container, because the default labels block access to the Wayland socket and `/dev/dri`, which the window needs. The container stays isolated by namespaces, dropped capabilities and `--userns=keep-id`.
+
+## Time Zone
+The `--tz=local` option passes the host's time zone into the container, so the times shown by the apps (e.g. timestamps and scheduled times) match the host's clock. Replace `local` with a zone name (e.g. `Europe/Warsaw`) to set another one.
 
 ## Operator
 The `A_SKILLS_OPERATOR` variable selects the 'engram' - your own custom assistant - loaded from `.github/skills/engrams`; left empty or unset, none is loaded. In order to set it, add this line to the `podman run` command above, before the image name:

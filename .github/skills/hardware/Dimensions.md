@@ -8,6 +8,8 @@
 ## Technical:
 - Measure every part by hand, even when a drawing exists, and record the measurement next to the maker's value.
 - Use calipers for flat parts and for the diameter or radius of holes. When asking the Operator to measure, name the reading needed (smallest or largest, with or without the board).
+- Check readings against each other before using them: distances measured to opposite edges should add up to the part's measured size.
+- Warn the Operator to take care when measuring fragile parts (e.g. glass, lenses, membranes, textiles): prefer a ruler or an estimate by eye over calipers, and mark the value as an estimate.
 - In tables, keep the full range of the readings. In the CAD files, use one value from it: the average, or the upper bound where clearance is needed.
 - Mark each value in the CAD files as `measured`, `drawing` or `MEASURE` (still an estimate).
 - Link datasheets and drawings. Never commit them.

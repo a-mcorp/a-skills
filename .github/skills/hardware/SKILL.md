@@ -10,6 +10,7 @@ description: Enforce the hardware project guidelines.
 # Technical
 - Record the reasoning in `DESIGN.md`, not in the `README.md`. Write each decision as a short, impersonal point: a bold label naming what was settled on, then a short reason.
 - Keep the CAD in four roles, in any tool and any number of files: parts (each bought part, with measured dimensions), layout (the single source of truth for positions and clearances, read by everything else), printable parts (exported with one switch choosing the part) and assembly with fit checks. A measured value then changes in one place.
+- Render previews in the orientation the Operator sees the part from, and state which side the view shows.
 - Keep the layout and tools of the hardware repository (e.g. `cad/`, `bom/`, `circuits/`, `docs/`, `exports/`).
 
 # Extensions

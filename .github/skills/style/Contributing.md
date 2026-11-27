@@ -9,9 +9,13 @@
 - Base a new repository on an existing template where one fits its use case, and include only the tools it needs.
 - Keep templates lean: define the form of a project - the files, the folders, their purpose and placeholders - not the methods for filling it in. Give the tools in a template as placeholders, with an example in a comment.
 - Do not use Conventional Commits prefixes (e.g. 'feat:', 'chore:', 'docs:'). Write plain, descriptive commit messages.
-- Commit changes on a `feature/<acronym>` branch, then open a Pull Request from the repository's template, with a descriptive title and the new `CHANGELOG.md` entries copied into its description. Squash Pull Requests into `develop` or the trunk.
+- Commit changes on a `feature/<acronym>` branch, then open a Pull Request from the repository's template, with a descriptive title and the new `CHANGELOG.md` entries copied into its description.
 - Leave committing and pushing to the Operator, who takes responsibility for the changes.
-- Changes reach the trunk branches (`trunk`, `main`) only through Pull Requests, squashed on merge; never commit, merge or force push into them directly.
+- Follow the branching strategy of the repository:
+  - Trunk-based: `trunk` is the only long-lived branch; feature branches reach it through Pull Requests, squashed on merge.
+  - Gitflow: feature branches reach `develop` through Pull Requests, squashed on merge; `develop` reaches `main` through a Pull Request with a merge commit.
+- Use the trunk-based strategy by default, and Gitflow for projects with regular collaborators.
+- Changes reach the long-lived branches (`trunk`, `develop`, `main`) only through Pull Requests; never commit, merge or force push into them directly.
 - When filling in a Pull Request template, keep all of its comments (`<!-- ... -->`) and write each section's content below its comment. Copy the new `CHANGELOG.md` entries into the Changelog section. For a release, start the title with the version (e.g. "1.1.0 - ..."), and use "Release <version>:" as the Changelog section's story line; the version appears only there - the Summary and Comments may name the level (major, minor or patch) instead.
 - The Summary is a short description of the work as a whole, in prose, not a list; the Changelog section lists every change. Fill in Examples (screenshots of new features, or anything worth showing) and Testing where they apply, at the Operator's discretion; otherwise, leave them with only their comment.
 - Limit a Pull Request description to the changes. Do not tell the Maintainer or other Contributors what to do next (e.g. tagging or merging), as those steps depend on each repository's workflow.
