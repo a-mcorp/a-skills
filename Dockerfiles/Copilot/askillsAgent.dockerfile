@@ -25,6 +25,11 @@ ARG REPOSITORY_FLATHUB=https://flathub.org/repo/flathub.flatpakrepo
 RUN dnf -y install curl flatpak git openssl3-libs shadow-utils \
     && dnf clean all
 
+# General-purpose tools: 'ps' for processes, 'file' for file types and 'jq' for JSON.
+# 'jq' also merges each image layer's VS Code settings into the base ones.
+RUN dnf -y install procps-ng file jq \
+    && dnf clean all
+
 # Enable Flatpak repositories
 RUN flatpak remote-add --system --if-not-exists flathub \
     "$REPOSITORY_FLATHUB"
@@ -106,6 +111,9 @@ ENV GTK_THEME=Adwaita:dark
 # RUN dnf -y install dbus-daemon ptyxis && dnf clean all
 RUN dnf -y install foot && dnf clean all
 
+# D-Bus session bus, started by the entrypoint. Firefox on Wayland passes new links to its open window only over D-Bus; without it, each link waits until the previous window is closed.
+RUN dnf -y install dbus-daemon && dnf clean all
+
 # Microphone input through the host's PulseAudio socket, mounted in 'podman run'. The default ALSA device is pointed at that socket, since 'pipewire-alsa' would need the unmounted 'pipewire-0' socket.
 RUN dnf -y install alsa-plugins-pulseaudio pulseaudio-libs sox && dnf clean all \
     && printf '%s\n' 'pcm.!default { type pulse }' 'ctl.!default { type pulse }' > /etc/asound.conf
@@ -126,8 +134,11 @@ RUN code --no-sandbox \
 #--install-extension GitHub.copilot-chat \
 #--install-extension GitHub.copilot \    
 
-COPY --chown=agent:agent vsc-settings.json \
-    /home/agent/.config/Code/User/settings.json
+# Base VS Code settings, kept outside the home volume. Image layers merge their own settings into this file, and the entrypoint applies it on every start.
+COPY vsc-settings.json /etc/askillsagent/vsc-settings.json
+
+# Shared VS Code extensions, outside the home volume. Layers append their own lists, and the entrypoint syncs the volume with the result on every start.
+COPY vsc-extensions.txt /etc/askillsagent/vsc-extensions.txt
 
 ENTRYPOINT ["/usr/local/bin/entrypoint"]
 CMD ["copilot-vsc"]

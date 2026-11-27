@@ -26,6 +26,11 @@ ARG REPOSITORY_FLATHUB=https://flathub.org/repo/flathub.flatpakrepo
 RUN dnf -y install curl dpkg flatpak git openssl3-libs shadow-utils \
     && dnf clean all
 
+# General-purpose tools: 'ps' for processes, 'file' for file types and 'jq' for JSON.
+# 'jq' also merges each image layer's VS Code settings into the base ones.
+RUN dnf -y install procps-ng file jq \
+    && dnf clean all
+
 # Enable Flatpak repositories
 RUN flatpak remote-add --system --if-not-exists flathub \
     "$REPOSITORY_FLATHUB"
@@ -109,11 +114,21 @@ ENV GTK_THEME=Adwaita:dark
 # RUN dnf -y install dbus-daemon ptyxis && dnf clean all
 RUN dnf -y install foot && dnf clean all
 
+# D-Bus session bus, started by the entrypoint. Firefox on Wayland passes new links to its open window only over D-Bus; without it, each link waits until the previous window is closed.
+RUN dnf -y install dbus-daemon && dnf clean all
+
 # Microphone input through the host's PulseAudio socket, mounted in 'podman run'. The default ALSA device is pointed at that socket, since 'pipewire-alsa' would need the unmounted 'pipewire-0' socket.
 RUN dnf -y install alsa-plugins-pulseaudio pulseaudio-libs sox && dnf clean all \
     && printf '%s\n' 'pcm.!default { type pulse }' 'ctl.!default { type pulse }' > /etc/asound.conf
 
 COPY --chmod=755 Claude/entrypoint.sh /usr/local/bin/entrypoint
+
+# VS Code extensions: the shared list plus the Claude Code extension, outside the home volume. Layers append their own lists,
+# and the entrypoint syncs the volume with the result on every start.
+COPY vsc-extensions.txt vsc-extensions-claude.txt /tmp/
+RUN mkdir -p /etc/askillsagent \
+    && cat /tmp/vsc-extensions.txt /tmp/vsc-extensions-claude.txt > /etc/askillsagent/vsc-extensions.txt \
+    && rm /tmp/vsc-extensions*.txt
 
 # Run with '--userns=keep-id' so this UID maps to the host user and root inside the container is not root on the host.
 # Only the folders chosen in 'podman run' are mounted, and '/run/user/1000' is an in-memory 'tmpfs'.
@@ -126,12 +141,8 @@ WORKDIR /workspaces
 RUN code --no-sandbox \
     && mkdir -p /home/agent/.config/Code/User /home/agent/.claude
 
-# VS Code keeps up to 20 downloaded '.vsix' packages, so the copy is removed in the same 'RUN' as the install.
-RUN code --install-extension anthropic.claude-code \
-    && rm -rf /home/agent/.config/Code/CachedExtensionVSIXs
-
-COPY --chown=agent:agent vsc-settings.json \
-    /home/agent/.config/Code/User/settings.json
+# Base VS Code settings, kept outside the home volume. Image layers merge their own settings into this file, and the entrypoint applies it on every start.
+COPY vsc-settings.json /etc/askillsagent/vsc-settings.json
 
 # Claude Code settings, enabling voice dictation in tap mode by default.
 COPY --chown=agent:agent vsc-claude.json \

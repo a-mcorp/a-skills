@@ -1,0 +1,9 @@
+{
+    "workbench.editorAssociations": {
+        "*.pdf": "pdf.preview"
+    },
+    "search.exclude": {
+        "**/*.stl": true,
+        "**/*.3mf": true
+    }
+}

@@ -8,7 +8,9 @@
     - [GitHub Copilot image](#github-copilot-image)
     - [Claude Code image](#claude-code-image)
   - [Hardware image](#hardware-image)
+  - [LaTeX image](#latex-image)
 - [Extensions](#extensions)
+  - [Layered settings](#layered-settings)
 
 # Podman
 In order to start the container, first build the container using one of the Docker images under `Dockerfiles`.
@@ -116,7 +118,32 @@ openscad -D 'part="back"' --viewall --autocenter --imgsize=1200,1200 -o back.png
 
 > **Note:** OpenSCAD runs from the command line only. The AppImage bundles Qt 6.2 with an X11 plugin and no Wayland one, so its window cannot open in this Wayland-only container; edit in OpenSCAD on the host, while the container renders, checks and previews.
 
-> **Note:** the `askillsagent-home` volume keeps the extensions it already holds, so the PDF viewer only appears in a new volume, or after installing it once with `code --install-extension tomoki1207.pdf`.
+> **Note:** the extensions are synced with the image's list on every start; see [Layered settings](#layered-settings).
+
+## LaTeX image
+An optional layer for LaTeX documents: Tectonic (the static binary from its GitHub release), `latexindent` for formatting, and LaTeX Workshop in Visual Studio Code, set up to build with Tectonic and preview the PDF. Tectonic downloads only the TeX packages a document uses, on its first build, and keeps them in the `askillsagent-home` volume. Build the Claude Code image first, then:
+
+```Bash
+podman build --pull=never -f Dockerfiles/Claude/latex.dockerfile \
+  -t docker.io/library/askillsagent-latex Dockerfiles/
+```
+
+Both layers can be stacked by building one on top of the other with `BASE_IMAGE`, e.g. LaTeX on top of the hardware image:
+
+```Bash
+podman build --pull=never -f Dockerfiles/Claude/latex.dockerfile \
+  --build-arg BASE_IMAGE=docker.io/library/askillsagent-hardware \
+  -t docker.io/library/askillsagent-hardware-latex Dockerfiles/
+```
+
+The Tectonic version is set by `TECTONIC_VERSION` and checked against `TECTONIC_SHA256` at the top of the file; change both for a newer release.
 
 # Extensions
 In order to adjust `vsc-settings.json` either have a look personally into the [SETTINGS.md](SETTINGS.md) file, where all up-to-date (more or less) settings for both Claude and Copilot are defined, or task the agent with updating it itself.
+
+## Layered settings
+The Visual Studio Code settings follow the same layers as the images. `vsc-settings.json` holds the base settings of both images, and each optional layer adds its own file (`vsc-settings-hardware.json`, `vsc-settings-latex.json`), merged into the base settings with `jq` at build time. Keys in a layer's file override the same keys in the base, and objects are merged key by key.
+
+The merged file lives in `/etc/askillsagent/vsc-settings.json`, outside the `askillsagent-home` volume, which would otherwise hide it. The entrypoint copies it into the user's `settings.json` on every start of Visual Studio Code, so changes made in the settings UI last only until the next start; lasting changes belong in these files. All files are plain JSON, without comments, since `jq` cannot read them.
+
+The extensions are layered the same way: `vsc-extensions.txt` lists the ones shared by both images, one ID per line, `vsc-extensions-claude.txt` adds the Claude Code extension, and each optional layer appends its own file (`vsc-extensions-hardware.txt`, `vsc-extensions-latex.txt`). On every start of Visual Studio Code, the entrypoint syncs the volume with the combined list in `/etc/askillsagent/vsc-extensions.txt`: extensions not on the list are uninstalled, and missing ones installed. An extension installed by hand is therefore removed on the next start; lasting ones belong in these lists. A failed download (e.g. offline) does not stop the start, and is tried again on the next one.

@@ -70,5 +70,108 @@
     "claudeCode.hideOnboarding": true,
     "claudeCode.focusView": true,
     "claudeCode.respectGitIgnore": true,
-    "claudeCode.allowDangerouslySkipPermissions": false
+    "claudeCode.allowDangerouslySkipPermissions": false,
+    "gitlens.telemetry.enabled": false,
+    "redhat.telemetry.enabled": false,
+    "security.workspace.trust.untrustedFiles": "open",
+    "telemetry.telemetryLevel": "off",
+    "window.commandCenter": false,
+    "window.customTitleBarVisibility": "auto",
+    "window.menuBarVisibility": "toggle",
+    "workbench.colorTheme": "Bearded Theme Earth",
+    "workbench.layoutControl.enabled": false,
+    "workbench.startupEditor": "none",
+    "editor.detectIndentation": true,
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true,
+    "editor.quickSuggestions": {
+        "comments": "off",
+        "other": "on",
+        "strings": "on"
+    },
+    "editor.tabSize": 4,
+    "files.autoSave": "onFocusChange",
+    "files.autoSaveDelay": 1000,
+    "git.allowForcePush": false,
+    "git.openRepositoryInParentFolders": "never",
+    "cSpell.ignorePaths": [
+        "package-lock.json",
+        "node_modules",
+        "vscode-extension",
+        ".git/{info,lfs,logs,refs,objects}/**",
+        ".git/{index,*refs,*HEAD}",
+        ".vscode",
+        ".vscode-insiders"
+    ],
+    "cSpell.language": "en,pl",
+    "indentRainbow.excludedLanguages": [
+        "plaintext"
+    ],
+    "indentRainbow.includedLanguages": [],
+    "python.analysis.typeCheckingMode": "basic",
+    "python.languageServer": "Pylance",
+    "ruff.configurationPreference": "filesystemFirst",
+    "ruff.importStrategy": "fromEnvironment",
+    "ruff.lineLength": 88,
+    "ruff.lint.extendSelect": [
+        "I"
+    ],
+    "markdown.extension.tableFormatter.enabled": false,
+    "powershell.powerShellDefaultVersion": "PowerShell",
+    "yaml.schemas": {
+        "https://json.schemastore.org/github-workflow.json": [
+            "/.github/workflows/**/*.yml",
+            "/.github/workflows/**/*.yaml"
+        ],
+        "https://json.schemastore.org/github-action.json": [
+            "/.github/actions/**/*.yml",
+            "/.github/actions/**/*.yaml"
+        ],
+        "https://raw.githubusercontent.com/microsoft/azure-pipelines-vscode/main/service-schema.json": [
+            "azure-pipelines/**/*.yml",
+            "azure-pipelines/**/*.yaml"
+        ]
+    },
+    "[css][less][scss]": {
+        "editor.defaultFormatter": "vscode.css-language-features"
+    },
+    "[dockerfile]": {
+        "editor.defaultFormatter": "ms-azuretools.vscode-containers"
+    },
+    "[html]": {
+        "editor.defaultFormatter": "vscode.html-language-features"
+    },
+    "[javascript][javascriptreact][typescript][typescriptreact]": {
+        "editor.defaultFormatter": "vscode.typescript-language-features"
+    },
+    "[json][jsonc]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "[markdown]": {
+        "editor.formatOnSave": false,
+        "editor.formatOnType": false
+    },
+    "[python]": {
+        "editor.codeActionsOnSave": {
+            "source.fixAll.ruff": "always",
+            "source.organizeImports.ruff": "always"
+        },
+        "editor.defaultFormatter": "charliermarsh.ruff",
+        "editor.formatOnType": true
+    },
+    "[shellscript]": {
+        "editor.defaultFormatter": "mads-hartmann.bash-ide-vscode",
+        "editor.tabSize": 2
+    },
+    "[terraform][terraform-deploy][terraform-mock][terraform-search][terraform-stack][terraform-test][terraform-vars]": {
+        "editor.defaultFormatter": "hashicorp.terraform",
+        "editor.formatOnSave": true,
+        "editor.formatOnSaveMode": "file",
+        "editor.tabSize": 2
+    },
+    "[yaml]": {
+        "editor.tabSize": 2
+    },
+    "claudeCode.preferredLocation": "panel"
 }

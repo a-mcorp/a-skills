@@ -19,12 +19,26 @@ Template
 ## [2.1.0] - 2026-11-27
 ### Added
 - `style` skill, `Contributing`: two branching strategies - trunk-based (squashed Pull Requests into `trunk`) and Gitflow (squashed into `develop`, merged into `main`) - with trunk-based as the default.
+- `Dockerfiles/Claude/latex.dockerfile`: an optional LaTeX image with Tectonic, `latexindent` and LaTeX Workshop, set up to build with Tectonic; layers stack through `BASE_IMAGE`.
+- `Dockerfiles`: layered Visual Studio Code settings - each optional image merges its own `vsc-settings-<layer>.json` (`hardware`, `latex`) into the base `vsc-settings.json` at build time.
+- `Dockerfiles/vsc-settings.json`: general editor, formatting, Git, spelling and language settings.
+- `Dockerfiles/vsc-extensions.txt`: the extensions those settings configure - Ruff, Python, spelling with a Polish dictionary, GitLens, YAML, Markdown and others; the hardware layer adds the OpenSCAD extension.
+- `DESIGN.md`: the reasons behind the image layers, the layered settings, and the agent having no GitHub access and leaving commits and pushes to the Operator.
 - `ops` skill: inputs are required rather than given defaults inside scripts, modules or actions; a needed default is declared once, at the entry point.
 - `ops` skill, `Notation`: the naming scheme also applies to files and generated artefacts - named from the component to the part and its kind, and identical to the identifier that produces them.
 - `hardware` skill, `Printing`: large round openings keep their shape with a small peak, openings are cut perpendicular to the wall, and components under a printed part get a margin for print tolerance.
 - `hardware` skill: previews rendered in the orientation the Operator sees the part from; `Printing`: ergonomics prioritised where possible.
 - `hardware` skill, `Dimensions`: a warning to measure fragile parts without calipers where possible, and readings checked against each other before use.
+- `Dockerfiles/Claude/hardware.dockerfile`: NumPy and trimesh for measuring, repairing and packing meshes.
+- `Dockerfiles`: `ps`, `file` and `jq` in both base images.
 - `Dockerfiles/README.md`: `--tz=local` in the `podman run` command, so the container follows the host's time zone; a zone name sets another one.
+
+### Changed
+- `Dockerfiles`: the Visual Studio Code settings are kept in `/etc/askillsagent` and applied by the entrypoint on every start, since the home volume hid the image's copy; changes made in the settings UI last until the next start.
+- `Dockerfiles`: the Visual Studio Code extensions are listed in `vsc-extensions.txt` (shared), `vsc-extensions-claude.txt` and per-layer files (`hardware`, `latex`), instead of being installed at build time, and the entrypoint syncs the home volume with the combined list on every start - extensions not on the list are removed, missing ones installed.
+
+### Fixed
+- `Dockerfiles`: both images install `dbus-daemon` and start a D-Bus session in the entrypoint, so Firefox opens each new link as a tab in its running window instead of waiting for it to close.
 
 ## [2.0.1] - 2026-11-22
 ### Fixed

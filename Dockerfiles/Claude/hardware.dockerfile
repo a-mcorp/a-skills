@@ -22,8 +22,21 @@ USER root
 # Meshes, photos and datasheets: 'admesh' checks STL files for holes and broken surfaces, 'exiftool' reads and
 # strips photo metadata, 'poppler-utils' turns PDF drawings into text or images, Pillow crops and scales photos.
 # 'time' measures how long a render takes.
+# NumPy and trimesh measure, repair, mirror and scale meshes, and pack STL files into 3MF projects.
 RUN dnf -y install f3d mesa-dri-drivers mesa-libEGL admesh perl-Image-ExifTool poppler-utils python3-pillow time \
+      python3-numpy python3-trimesh \
     && dnf clean all
+
+# VS Code settings for hardware work, merged into the base settings that the entrypoint applies.
+COPY vsc-settings-hardware.json /etc/askillsagent/vsc-settings-hardware.json
+RUN jq -s '.[0] * .[1]' /etc/askillsagent/vsc-settings.json /etc/askillsagent/vsc-settings-hardware.json \
+      > /tmp/vsc-settings.json \
+    && mv /tmp/vsc-settings.json /etc/askillsagent/vsc-settings.json
+
+# VS Code extensions for hardware work, appended to the image's list that the entrypoint syncs on every start.
+COPY vsc-extensions-hardware.txt /tmp/vsc-extensions-hardware.txt
+RUN cat /tmp/vsc-extensions-hardware.txt >> /etc/askillsagent/vsc-extensions.txt \
+    && rm /tmp/vsc-extensions-hardware.txt
 
 # The AppImage cannot mount itself without FUSE in the container, so it is unpacked once and linked as 'openscad';
 # the unpacked folder is private to root, so it is opened up for the 'agent' user
@@ -38,10 +51,6 @@ RUN curl -fsSL -o /tmp/openscad.AppImage \
     && rm /tmp/openscad.AppImage
 
 USER agent
-
-# PDF viewer inside VS Code; the cached '.vsix' is removed in the same layer, like in the base image
-RUN code --install-extension tomoki1207.pdf \
-    && rm -rf /home/agent/.config/Code/CachedExtensionVSIXs
 
 ENTRYPOINT ["/usr/local/bin/entrypoint"]
 CMD ["claude-vsc"]
